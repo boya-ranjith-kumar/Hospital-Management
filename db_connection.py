@@ -3,7 +3,7 @@ def db_conn_func():
     return mysql.connector.connect(
     host='localhost',
     user='root',
-    password='Ranjith-@6305', 
+    password='***********', 
     database='pdbc'
 )
 
