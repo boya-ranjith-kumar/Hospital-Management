@@ -1,4 +1,5 @@
 from db_connection import db_conn_func
+import pandas as pd
 a= db_conn_func()
 x=a.cursor()
 def view_patient():
@@ -7,20 +8,22 @@ def view_patient():
     print("----------------------")
     if op.lower()=="all":
         query="select * from patients"
-        x.execute(query)
-        aaa=x.fetchall()
-        for i in aaa:
-           print(i)
+        df = pd.read_sql(query, a)
+        print(df)
+        # x.execute(query)
+        # aaa=x.fetchall()
+        # for i in aaa:
+        #    print(i)
     elif op.lower()=="few":
         criteria1=int(input("Enter patient admission number : "))
         print("---------------------------------")
         query="select * from patients where admission_number=%s"
-        x.execute(query,(criteria1,))
-        bbb=x.fetchall()
-        for i in bbb:
-           print(i)
-    else:
-        print("Not found")
+        df = pd.read_sql(query, a,params=(criteria1,))
+        print(df)
+        # x.execute(query,(criteria1,))
+        # bbb=x.fetchall()
+        # for i in bbb:
+        #    print(i)
 
 def update_berth():
     admission=int(input("Enter patient admission number : "))
@@ -80,6 +83,9 @@ def fee_details():
     query="select patient_name,total_fee,amount_paid,pending_fee from patients where admission_number=%s"
     x.execute(query,(criteria,))
     aaa=x.fetchall()
+    if not aaa:
+        print("No patient found.")
+        return
     print("----------------------------")
     print("Patient Name-",aaa[0][0])
     print("Total Fee -",aaa[0][1])
